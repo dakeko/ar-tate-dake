@@ -9,27 +9,46 @@
   <style>
     html, body { margin: 0; overflow: hidden; }
     #start-button {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 999;
-  padding: 20px 40px;
-  font-size: 18px;
-  background: rgba(255, 255, 255, 0.75);
-  color: #333;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-radius: 16px;
-  cursor: pointer;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  letter-spacing: 0.05em;
-}
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 999;
+      padding: 20px 40px;
+      font-size: 18px;
+      background: rgba(255, 255, 255, 0.75);
+      color: #333;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      letter-spacing: 0.05em;
+    }
+    #link-buttons {
+      position: fixed;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: none;
+      gap: 20px;
+      flex-direction: row;
+    }
+    #link-buttons img {
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
   <button id="start-button" style="display:none">タップしてARを開始</button>
+  <div id="link-buttons">
+    <img src="assets/images/icon_home.png" onclick="window.open('https://d-dizain.com', '_blank')">
+    <img src="assets/images/instagram.png" onclick="window.open('https://instagram.com/あなたのアカウント', '_blank')">
+  </div>
 
   <a-scene mindar-image="imageTargetSrc: assets/targets.mind;"
            color-space="sRGB"
@@ -47,15 +66,15 @@
 
     <a-camera position="0 0 0" look-controls="enabled:false"></a-camera>
 
-  <a-entity mindar-image-target="targetIndex:0"
-          id="card-target"
-          scale="2 2 2">
-  <a-video id="ar-video"
-           src="#video"
-           width="1"
-           height="1.8"
-           position="0 0 0.001"></a-video>
-</a-entity>
+    <a-entity mindar-image-target="targetIndex:0"
+              id="card-target"
+              scale="2 2 2">
+      <a-video id="ar-video"
+               src="#video"
+               width="1"
+               height="1.8"
+               position="0 0 0.001"></a-video>
+    </a-entity>
 
   </a-scene>
 
@@ -63,22 +82,17 @@
     const target = document.querySelector('#card-target');
     const video = document.querySelector('#video');
     const btn = document.querySelector('#start-button');
+    const linkButtons = document.querySelector('#link-buttons');
 
-    // ボタンをタップしてからARスタート
-    btn.addEventListener('click', () => {
-      btn.style.display = 'none';
-      video.load();
-    });
-
-    // 名刺を検出したら再生
     target.addEventListener('targetFound', () => {
       video.play();
+      linkButtons.style.display = 'flex';
     });
 
-    // 名刺が外れたら停止・巻き戻し
     target.addEventListener('targetLost', () => {
       video.pause();
       video.currentTime = 0;
+      linkButtons.style.display = 'none';
     });
   </script>
 
